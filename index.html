@@ -1,15 +1,34 @@
 <!DOCTYPE html>
 <html lang="ja">
-
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #searchContainer {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
+        #pac-input {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
 <head>
     <meta charset="UTF-8">
     <title>フォトリアリスティック3Dマップ</title>
     <script src="https://cesium.com/downloads/cesiumjs/releases/1.95/Build/Cesium/Cesium.js"></script>
     <link href="https://cesium.com/downloads/cesiumjs/releases/1.95/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
-    <script>
+    <!--script>
         // ここにCesium ionのアクセストークンを設定
         Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxNzI2YjQyMS1lN2NiLTQxMzUtYjM5Ny04M2E0MGIyMGRiNjkiLCJpZCI6MTM4MTQ2LCJpYXQiOjE3MjgwOTI0OTl9.rGIUNZ_0D0fmKB1M3lfNRhlvK5M8MRAczQlsIbHWLbY';
-    </script>
+    </script-->
 </head>
 
 <body>

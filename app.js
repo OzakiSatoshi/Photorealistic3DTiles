@@ -1,4 +1,7 @@
-import config, { loadGoogleMapsAPI } from './config.js';
+import config, { loadGoogleMapsAPI, initCesium } from './config.js';
+
+// Cesiumの初期化
+initCesium();
 
 // Cesium viewerの初期化
 const viewer = new Cesium.Viewer('cesiumContainer', {
