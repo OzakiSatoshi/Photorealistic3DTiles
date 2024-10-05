@@ -1,4 +1,4 @@
-import config from './config.js';
+import config, { loadGoogleMapsAPI } from './config.js';
 
 // Cesium viewerの初期化
 const viewer = new Cesium.Viewer('cesiumContainer', {
@@ -28,77 +28,42 @@ viewer.camera.setView({
     }
 });
 
-// Google Maps Platformのクレジットを追加
-viewer.scene.frameState.creditDisplay.addDefaultCredit(
-    new Cesium.Credit('<a href="https://www.google.com/help/terms_maps/">Google</a> © 2023', '', 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png')
-);
-
-// Autocompleteウィジェットの設定
-const input = document.getElementById('pac-input');
-const autocomplete = new google.maps.places.Autocomplete(input);
-
-// 場所が選択されたときのイベントリスナー
-autocomplete.addListener('place_changed', () => {
-    const place = autocomplete.getPlace();
-    if (!place.geometry) return;
-
-    // 選択された場所に移動
-    viewer.camera.flyTo({
-        destination: Cesium.Cartesian3.fromDegrees(
-            place.geometry.location.lng(),
-            place.geometry.location.lat(),
-            1000
-        ),
-        orientation: {
-            heading: Cesium.Math.toRadians(0),
-            pitch: Cesium.Math.toRadians(-45),
-            roll: 0.0
-        }
-    });
-
-    // 選択された場所にマーカーを追加
-    viewer.entities.add({
-        position: Cesium.Cartesian3.fromDegrees(
-            place.geometry.location.lng(),
-            place.geometry.location.lat()
-        ),
-        billboard: {
-            image: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-        }
-    });
-
-    // グローバルスコープで initMap 関数を定義
-    window.initMap = function() {
-        // Autocompleteウィジェットの設定
-        const input = document.getElementById('pac-input');
-        const autocomplete = new google.maps.places.Autocomplete(input, {
-            types: ['(cities)'],
-            // APIキーを環境変数から取得
-            key: config.GOOGLE_MAPS_API_KEY
-        });
-
-        // 場所が選択されたときのイベントリスナー
-        autocomplete.addListener('place_changed', () => {
-            const place = autocomplete.getPlace();
-            if (!place.geometry) {
-                console.error('選択された場所の情報が取得できませんでした。');
-                return;
-            }
-
-            // 選択された場所に移動
-            viewer.camera.flyTo({
-                destination: Cesium.Cartesian3.fromDegrees(
-                    place.geometry.location.lng(),
-                    place.geometry.location.lat(),
-                    10000 // 高度（メートル）
-                ),
-                orientation: {
-                    heading: Cesium.Math.toRadians(0),
-                    pitch: Cesium.Math.toRadians(-45),
-                    roll: 0.0
-                },
-                duration: 3 // 移動にかかる時間（秒）
-            });
-        });
-    };
+// Google Maps APIの読み込みと初期化
+loadGoogleMapsAPI().then(() => {
+    initMap();
+}).catch(error => {
+    console.error('Google Maps APIの読み込みに失敗しました:', error);
 });
+
+// グローバルスコープで initMap 関数を定義
+window.initMap = function() {
+    // Autocompleteウィジェットの設定
+    const input = document.getElementById('pac-input');
+    const autocomplete = new google.maps.places.Autocomplete(input, {
+        types: ['(cities)']
+    });
+
+    // 場所が選択されたときのイベントリスナー
+    autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace();
+        if (!place.geometry) {
+            console.error('選択された場所の情報が取得できませんでした。');
+            return;
+        }
+
+        // 選択された場所に移動
+        viewer.camera.flyTo({
+            destination: Cesium.Cartesian3.fromDegrees(
+                place.geometry.location.lng(),
+                place.geometry.location.lat(),
+                10000 // 高度（メートル）
+            ),
+            orientation: {
+                heading: Cesium.Math.toRadians(0),
+                pitch: Cesium.Math.toRadians(-45),
+                roll: 0.0
+            },
+            duration: 3 // 移動にかかる時間（秒）
+        });
+    });
+};

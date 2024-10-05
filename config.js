@@ -1,5 +1,5 @@
 const config = {
-    GOOGLE_MAPS_API_KEY: '' // この値は後で動的に設定されます
+    GOOGLE_MAPS_API_KEY: 'AIzaSyA925pDFAK-LsUEXU1futIk-2QDmiFIdx4' // この値は後で動的に設定されます
 };
 
 if (typeof process !== 'undefined' && process.env.GOOGLE_MAPS_API_KEY) {
