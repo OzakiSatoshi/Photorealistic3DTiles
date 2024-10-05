@@ -1,3 +1,5 @@
+import config from './config.js';
+
 // Cesium viewerの初期化
 const viewer = new Cesium.Viewer('cesiumContainer', {
     terrainProvider: Cesium.createWorldTerrain(),
@@ -70,7 +72,9 @@ autocomplete.addListener('place_changed', () => {
         // Autocompleteウィジェットの設定
         const input = document.getElementById('pac-input');
         const autocomplete = new google.maps.places.Autocomplete(input, {
-            types: ['(cities)']
+            types: ['(cities)'],
+            // APIキーを環境変数から取得
+            key: config.GOOGLE_MAPS_API_KEY
         });
 
         // 場所が選択されたときのイベントリスナー
