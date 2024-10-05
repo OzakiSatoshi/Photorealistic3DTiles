@@ -9,15 +9,19 @@ const viewer = new Cesium.Viewer('cesiumContainer', {
     navigationHelpButton: false,
     animation: false,
     timeline: false,
-    fullscreenButton: false
+    fullscreenButton: false,
+    sceneMode: Cesium.SceneMode.SCENE3D
 });
+
+// 3D建物の有効化
+viewer.scene.primitives.add(Cesium.createOsmBuildings());
 
 // 初期視点の設定
 viewer.camera.setView({
-    destination: Cesium.Cartesian3.fromDegrees(139.7674, 35.6815, 5000000),
+    destination: Cesium.Cartesian3.fromDegrees(139.7674, 35.6815, 10000),
     orientation: {
-        heading: 0.0,
-        pitch: -Math.PI/2,
+        heading: Cesium.Math.toRadians(0),
+        pitch: Cesium.Math.toRadians(-45),
         roll: 0.0
     }
 });
@@ -60,4 +64,37 @@ autocomplete.addListener('place_changed', () => {
             image: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
         }
     });
+
+    // グローバルスコープで initMap 関数を定義
+    window.initMap = function() {
+        // Autocompleteウィジェットの設定
+        const input = document.getElementById('pac-input');
+        const autocomplete = new google.maps.places.Autocomplete(input, {
+            types: ['(cities)']
+        });
+
+        // 場所が選択されたときのイベントリスナー
+        autocomplete.addListener('place_changed', () => {
+            const place = autocomplete.getPlace();
+            if (!place.geometry) {
+                console.error('選択された場所の情報が取得できませんでした。');
+                return;
+            }
+
+            // 選択された場所に移動
+            viewer.camera.flyTo({
+                destination: Cesium.Cartesian3.fromDegrees(
+                    place.geometry.location.lng(),
+                    place.geometry.location.lat(),
+                    10000 // 高度（メートル）
+                ),
+                orientation: {
+                    heading: Cesium.Math.toRadians(0),
+                    pitch: Cesium.Math.toRadians(-45),
+                    roll: 0.0
+                },
+                duration: 3 // 移動にかかる時間（秒）
+            });
+        });
+    };
 });
