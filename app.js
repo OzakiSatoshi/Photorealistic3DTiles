@@ -1,6 +1,25 @@
 // Cesium viewerの初期化
 const viewer = new Cesium.Viewer('cesiumContainer', {
-    terrainProvider: Cesium.createWorldTerrain()
+    terrainProvider: Cesium.createWorldTerrain(),
+    imageryProvider: new Cesium.IonImageryProvider({ assetId: 3 }),
+    baseLayerPicker: false,
+    geocoder: false,
+    homeButton: false,
+    sceneModePicker: false,
+    navigationHelpButton: false,
+    animation: false,
+    timeline: false,
+    fullscreenButton: false
+});
+
+// 初期視点の設定
+viewer.camera.setView({
+    destination: Cesium.Cartesian3.fromDegrees(139.7674, 35.6815, 5000000),
+    orientation: {
+        heading: 0.0,
+        pitch: -Math.PI/2,
+        roll: 0.0
+    }
 });
 
 // Google Maps Platformのクレジットを追加
